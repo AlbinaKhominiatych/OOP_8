@@ -1,18 +1,21 @@
-"""Завдання 1
-Задайте метаклас, що автоматично додає
-додатковий функціонал до всіх класів, що його
-використовують."""
+"""Завдання 2
+Створіть метаклас, що перевіряє наявність певних
+атрибутів у всіх класах, які використовують цей
+метаклас."""
 class MyMeta(type):
     def __new__(cls, name, bases, dct):
-        dct["hello"] = lambda self: print(f"Hello from {self.__class__.__name__}")
+        #перелік атрибутів
+        required_attributes = ['attr1', "attr2"]
+        for i in required_attributes:
+            if i not in dct:
+                raise AttributeError(f"В класі {name} повинен мати тільки {i} атрибути")
         return super().__new__(cls, name, bases, dct)
 
 class MyClass(metaclass = MyMeta):
-    attr = 10
-    def metod(self):
-        pass
+    #attr1 = 10
+    #attr2 = 100
+    attr3 = "Hello!"
 
 print(dir(MyClass))
 obj = MyClass()
-print(obj.attr)
-obj.hello()
+print(obj.attr1)
