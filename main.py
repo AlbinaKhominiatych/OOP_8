@@ -8,7 +8,7 @@ class MyMeta(type):
         required_attributes = ['attr1', "attr2"]
         for i in required_attributes:
             if i not in dct:
-                raise AttributeError(f"В класі {name} повинен мати тільки {i} атрибути")
+                raise AttributeError("В класі повинен мати тільки ['attr1', 'attr2'] атрибути")
         return super().__new__(cls, name, bases, dct)
 
 class MyClass(metaclass = MyMeta):
