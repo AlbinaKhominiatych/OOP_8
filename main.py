@@ -1,30 +1,22 @@
 # практичне завдання
-"""Метаклас для кешування результатів методів класу:
- Реалізуйте метаклас, який автоматично кешує
- результати виклику методів класу для підвищення швидкодії."""
+"""Зміна поведінки операторів класу: Створіть метаклас,
+який дозволяє змінювати поведінку різних операторів
+(наприклад, +, -, *, /) для об'єктів певного класу."""
 
 
-class Cached(type):
+class OperatorOverloadMeta(type):
     def __new__(cls, name, bases, dct):
-        cache = {}
-
-        def wrap_method(method):
-            def wrapped(*args, **kwargs):
-                cache_key = (method.__name__, args, frozenset(kwargs.items()))
-                if cache_key not in cache:
-                    cache[cache_key] = method(*args, **kwargs)
-                print(cache)
-            return wrapped
-        for attr_name, attr_value in dct.items():
-            if callable(attr_value):
-                dct[attr_name] = wrap_method(attr_value)
-        return super().__new__(cls, name, bases, dct)
+         dct["__add__"] = lambda self, other: self.add(other)
+         return super().__new__(cls, name, bases, dct)
 
 
-class MyClass(metaclass=Cached):
-    def calculate(self, x):
-        return print(f"Розрахунок для {x} - {x ** 2}")
-obj = MyClass()
-obj.calculate(5)
-obj.calculate(100)
-obj.calculate(120)
+class MyClass(metaclass=OperatorOverloadMeta):
+    def __init__(self, value):
+        self.value = value
+
+    def add(self, other):
+        return  self.value + other.value if isinstance(other, MyClass) else self.value + other
+
+obj1 = MyClass(5)
+obj2 = MyClass(6)
+print(obj1 + obj2)
